@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: aks-helloworld
+
+spec:
+   replicas: 2
+   selector:
+       matchLabels:
+             app: aks-helloworld
+
+
+   template:
+     metadata:
+        labels:
+          app: aks-helloworld
+
+     spec:
+       containers:
+       - name: aks-helloworld
+         image: acrimages2.azurecr.io/spring-boot-app:v1.#{Build.BuildId}#
+         imagePullPolicy: Always
+         ports:
+         - containerPort: 8082
+       imagePullSecrets:
+       - name: secret-basic-auth
