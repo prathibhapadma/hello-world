@@ -21,6 +21,6 @@ spec:
          image: acrimages2.azurecr.io/quarkus/hello-world-jvm:latest
          imagePullPolicy: Always
          ports:
-         - containerPort: 8082
+         - containerPort: 8080
        imagePullSecrets:
        - name: secret-basic-auth
