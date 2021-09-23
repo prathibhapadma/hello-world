@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-   name: aks-helloworld
+   name: quarkas-helloworld
 
 spec:
    replicas: 2
    selector:
        matchLabels:
-             app: aks-helloworld
+             app: quarkas-helloworld
 
 
    template:
      metadata:
         labels:
-          app: aks-helloworld
+          app: quarkas-helloworld
 
      spec:
        containers:
-       - name: aks-helloworld
+       - name: quarkas-helloworld
          image: acrimages2.azurecr.io/quarkus/hello-world-jvm:latest
          imagePullPolicy: Always
          ports:
