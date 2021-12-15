@@ -10,5 +10,5 @@ steps:
 - task: Bash@3
   displayName: "Build"
   inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/.scripts/build.sh'
+    filePath: '$(Build.Repository.LocalPath)/.pipelines/.scripts/test.sh'
     
