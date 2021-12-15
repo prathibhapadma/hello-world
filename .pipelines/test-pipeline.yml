@@ -8,7 +8,26 @@ pool:
 
 steps:
 - task: Bash@3
-  displayName: "Build"
+  displayName: "Test"
   inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/.scripts/test.sh'
+    targetType: 'inline'
+    script: 'mvn test'
+
+- task: Bash@3
+  displayName: 'Copy Files'
+  inputs:
+    targetType: 'inline'
+    script: |
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+      condition: succeededOrFailed()
     
+- task: Bash@3
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    targetType: 'inline'
+    script: |
+       PathtoPublish: '$(build.artifactstagingdirectory)'
+      
+      
