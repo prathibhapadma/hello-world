@@ -6,9 +6,19 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: Bash@3
-  displayName: "Build"
-  inputs:
-    filePath: '$(Build.Repository.LocalPath)/.pipelines/.scripts/build.sh'
+stages:
+- stage: test
+  jobs:
+  - job: test
+    displayName: test
+    steps:
+    - task: Bash@3
+      inputs:
+        filePath: './.pipelines/.scripts/test.sh'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+
+  
     
