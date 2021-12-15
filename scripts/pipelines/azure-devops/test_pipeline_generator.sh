@@ -1,9 +1,13 @@
-while getopts n:l:d: flag
+while getopts n:l:d:t:r:b: flag
 do
     case "${flag}" in
         n) name=${OPTARG};;
         l) language=${OPTARG};;
         d) directory=${OPTARG};;
+        t) pat_token=${OPTARG};;
+        r) repository=${OPTARG};;
+        b) branch=${OPTARG};;
+           
     esac
 done
 
@@ -16,6 +20,10 @@ then
     echo "  -n    [Required] Name that will be set to the test pipeline."
     echo "  -l    [Required] Language or framework of the project."
     echo "  -d    [Required] Local directory of your project (the path should always be using '/' and not '\')."
+    echo "  -t    [Required] Pat token to login azure devops."
+    echo "  -r    [Required] repository of the project."
+    echo "  -b    [Required] branch."
+    
     exit
 fi
 
@@ -24,7 +32,7 @@ green='\e[1;32m'
 red='\e[0;31m'
 
 # Argument check.
-if test -z "$name" || test -z "$language" || test -z "$directory"
+if test -z "$name" || test -z "$language" || test -z "$directory" || test -z "$pat_token" || test -z "$repository" || test -z "$branch"
 then
     echo -e "${red}Missing parameters, all flags are mandatory."
     echo -e "${red}Use -h flag to display help."
@@ -59,11 +67,19 @@ cp "${language}-test.sh" "${scriptsDirectory}/test.sh"
 echo -e "${green}Committing and pushing to Git remote..."
 echo -e ${white}
 cd ${directory}
-git add .pipelines -f
+git add . -f
 git commit -m "Adding test pipeline source YAML"
 git push -u origin feature/test-pipeline
 
-# Creation of the pipeline.
-echo -e "${green}Generating the pipeline from the YAML template..."
+# Log into Azure DevOps with the PAT.
+echo -e "${green}Logging in to Azure DevOps with PAT token..."
 echo -e ${white}
-az pipelines create --name $name --yaml-path ".pipelines/test-pipeline.yml"
+echo $pat_token | az devops login
+
+# Create Azure Pipeline
+echo -e "${green}Create Azure Test Pipeline:"
+echo -e ${white}
+az pipelines create --name $name --repository $repository --branch $branch --yml-path ".pipelines/test-pipeline.yml"
+
+
+
