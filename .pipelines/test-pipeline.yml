@@ -6,6 +6,7 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+<<<<<<< HEAD
 stages:
 - stage: test
   jobs:
@@ -22,3 +23,30 @@ stages:
 
   
     
+=======
+steps:
+- task: Bash@3
+  displayName: "Test"
+  inputs:
+    targetType: 'inline'
+    script: 'mvn test'
+
+- task: Bash@3
+  displayName: 'Copy Files'
+  inputs:
+    targetType: 'inline'
+    script: |
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+      condition: succeededOrFailed()
+    
+- task: Bash@3
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    targetType: 'inline'
+    script: |
+       PathtoPublish: '$(build.artifactstagingdirectory)'
+      
+      
+>>>>>>> 367a764556e9ca4db497f48d3e4a4e066ea93129
